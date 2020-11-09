@@ -1,0 +1,20 @@
+{
+  "name": "libi-1",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chen7david/libi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chen7david/libi/issues"
+  },
+  "homepage": "https://github.com/chen7david/libi#readme"
+}
