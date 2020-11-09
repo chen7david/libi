@@ -15,7 +15,7 @@ const library = Libi('SomeMediaType', /* optional folder name */) // creates a l
 
 #### Watch Path
 <p>
-If a <code>watch-path</code> is not chosen, an import folder containing your watch folder(s) will automatically be created in the folder where you have pointed your home directory to. If a direcotry already exists with that name it will instead work from that directory. Note that it will not overide any folders or files that already exist.
+If a <code>watch-path</code> is not chosen, an import folder containing your watch folder(s) will automatically be created in the folder where you have pointed your home directory to. If a directory already exists with that name it will instead work from that directory. Note that it will not overide any folders or files that already exist.
 </p>
 
 
