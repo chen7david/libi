@@ -19,6 +19,12 @@ If a <code>watch-path</code> is not chosen, an import folder containing your wat
 </p>
 
 
+#### Media Type
+<p>
+Currently there are 2 supported media types: movies, and shows.
+If a <code>folder name</code> is not provided at instantiation, a library folder will be created with the name of the media type instead of a unique name.
+</p>
+
 ### Example Mask
 ```js
 module.exports = {
