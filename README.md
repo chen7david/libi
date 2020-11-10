@@ -55,7 +55,7 @@ module.exports = {
 ```
 
 ### Example Keymap
-This map renames all the fields in the matched object accordingly.
+This map renames all the fields in the matched metadata object that was returned by your agent accordingly.
 ```js
 module.exports = {
     title: 'name',
@@ -74,7 +74,7 @@ const matches = {
 const commonObj = {ext: '.mp4', lang:'en'}
 
 const valueMutator = (k, v) => {
-    
+
     /*
         key and value for each object property are given as the object is being itterated.
         You can modify the property values here ...
