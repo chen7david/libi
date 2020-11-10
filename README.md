@@ -7,7 +7,8 @@ const Libi = require('libi')({
     homedir: p.resolve(__dirname, /* some path*/),
     watchdir: p.resolve(__dirname, /* some path*/), // optional
     http: 'meta-agent',
-    mask: require('./mask')
+    mask: require('./mask'),
+    keymap: require('./keymap') // optional
 })
 
 const library = Libi('SomeMediaType', /* optional folder name */) // creates a library object
