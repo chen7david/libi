@@ -29,7 +29,6 @@ class Library {
         return mask
     }
 
-
     /* private functions */
 
     renameObjectsKeys(data, keymap = {}, func){

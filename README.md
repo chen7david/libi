@@ -53,3 +53,36 @@ module.exports = {
     },
 }
 ```
+
+### Example Keymap
+This map renames all the fields in the matched object accordingly.
+```js
+module.exports = {
+    title: 'name',
+    first_air_date: 'year',
+    release_date: 'year',
+    season_number: 's',
+    episode_number: 'e',
+}
+```
+
+### API
+```js
+const matches = {
+
+}
+const commonObj = {ext: '.mp4', lang:'en'}
+
+const valueMutator = (k, v) => {
+    
+    /*
+        key and value for each object property are given as the object is being itterated.
+        You can modify the property values here ...
+    */
+
+    if(k == 'year') v = new Date(v).getFullYear()
+    return v
+}
+
+const data = library.mapkeys(matches, commonObj, valueMutator)
+```
