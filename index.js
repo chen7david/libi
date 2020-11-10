@@ -21,17 +21,26 @@ class Library {
         return this
     }
 
-    setMediaTypeTo(type){
-        this.mediaType = type
-        return this
+    renderMask(data){
+        for(let items in collection)
+            for(let item  in collection[items])
+                for(let i  in collection[items][item])
+                    for(let key in map) collection[items][item][i] = collection[items][item][i].replace(key, map[key])
+        return mask
     }
 
-    getMask(func){
-        const object = {
-            folder: this.name,
-            file: this.name + '.mp4'
+    renameKeys(a = {}, keymap = {}, func){
+
+        const b = {}
+    
+        for(let k in a){
+            let v = a[k]
+            k = keymap[k] || k
+            if(func) v = func(k, v) 
+            b[k] = v
         }
-        return func(object)
+    
+        return b
     }
 }
 
