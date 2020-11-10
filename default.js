@@ -3,8 +3,8 @@ module.exports = {
         title: 'name',
         first_air_date: 'year',
         release_date: 'year',
-        season_number: 's',
-        episode_number: 'e',
+        season_number: '{s}',
+        episode_number: '{e}',
     },
     mask: {
         movie: {
@@ -15,10 +15,10 @@ module.exports = {
             folder: 'name (year)'
         },
         season: {
-            folder: 'season - S00E000'
+            folder: 'season - {s}'
         },
         episode: {
-            file: 'S00E000 - name.ext'
+            file: 'S{s}E{e} - name.ext'
         }, 
     }
 }

@@ -1,5 +1,6 @@
 const dd = (val) => console.log(val)
 const p = require('path')
+const { deburr, padStart } = require('lodash')
 const defaults = require('./default')
 
 class Library {
@@ -23,15 +24,31 @@ class Library {
         return this
     }
 
-    renderMask(data){
-        for(let items in collection)
-            for(let item  in collection[items])
-                for(let i  in collection[items][item])
-                    for(let key in map) collection[items][item][i] = collection[items][item][i].replace(key, map[key])
-        return mask
+    getMask(data){
+        const { ext, lang } = data.file
+        const m = this.mapkeys(data, { ext, lang }, (k, v) => {
+            if(k == 'year') v = new Date(v).getFullYear()
+            if(k == defaults.keymap['season_number']) v = padStart(v,2,'0')
+            if(k == defaults.keymap['episode_number']) v = padStart(v,3,'0')
+            return v
+        })
+        const rendered = this.renameObjectKeys(this.mask,{}, (k, v) => {
+                const match = m[k]
+                for(let i in v){
+                    let string = v[i]
+                    for(let key in match) string = string.replace(key, match[key])
+                    v[i] = string
+                }
+            return v
+        })
+        return rendered
     }
 
     /* private functions */
+
+    mapkeys(data, object, func){
+        return this.renameObjectsKeys(data, this.keymap, object, func)
+    }
 
     renameObjectsKeys(data, keymap = {}, func){
         for(let key in data){
