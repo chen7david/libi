@@ -70,7 +70,8 @@ module.exports = {
 ### API
 ```js
 const matches = {
-
+    movie: { ... },
+    file: { ... }
 }
 const commonObj = {ext: '.mp4', lang:'en'}
 
@@ -86,4 +87,23 @@ const valueMutator = (k, v) => {
 }
 
 const data = library.mapkeys(matches, commonObj, valueMutator)
+```
+
+
+```js
+const matches = {
+    show: { ... },
+    episode: { ... },
+    file: { ... }
+}
+
+const data = library.getMask(matches)
+/*
+{
+  movie: { folder: 'name (year)', file: 'name.ext' },
+  show: { folder: 'That is so raven (2003)' },
+  season: { folder: 'season - 04' },
+  episode: { file: 'S48E003 - Raven is Back.mp4' }
+}
+*/
 ```
