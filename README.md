@@ -89,7 +89,6 @@ const valueMutator = (k, v) => {
 const data = library.mapkeys(matches, commonObj, valueMutator)
 ```
 
-
 ```js
 const matches = {
     show: { ... },
@@ -98,7 +97,7 @@ const matches = {
 }
 
 const data = library.getMask(matches)
-/*
+/* outputs =>
 {
   movie: { folder: 'name (year)', file: 'name.ext' },
   show: { folder: 'That is so raven (2003)' },
