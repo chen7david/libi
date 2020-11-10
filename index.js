@@ -29,7 +29,17 @@ class Library {
         return mask
     }
 
-    renameKeys(a = {}, keymap = {}, func){
+
+    /* private functions */
+
+    renameObjectsKeys(data, keymap = {}, func){
+        for(let key in data){
+            data[key] = this.renameObjectKeys(data[key], keymap, func)
+        }
+        return data
+    }
+
+    renameObjectKeys(a = {}, keymap = {}, func){
 
         const b = {}
     
