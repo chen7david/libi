@@ -1,12 +1,14 @@
 const dd = (val) => console.log(val)
 const p = require('path')
+const defaults = require('./default')
 
 class Library {
     constructor(options){
         this.name = options.name
         this.mediaType = options.mediaType
         this.stat = {}
-        this.mask = options.mask
+        this.mask = Object.assign(defaults.mask, options.mask)
+        this.keymap = Object.assign(defaults.keymap, options.keymap)
         this.path = {
             homedir: p.join(options.homedir, this.name),
             watchdir: p.join(options.watchdir || options.homedir + '/' + 'import', this.name),
