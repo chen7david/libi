@@ -15,8 +15,15 @@ class Show extends Model {
             const search = id || show || query, options = {}
             if(year) options.year = year
             const match = await this.findOne(search, options)
+            const mask = this.renameKeys(match, (k, v) => {
+                /* MUTATE OBJECT VALUES */
+                if(k == 'year') v = new Date(v).getFullYear()
+                if(k == 's') v = padStart(v,2,'0')
+                if(k == 'e') v = padStart(v,3,'0')
+                return v
+            })
             // const mask = this.getMask({movie, file:item})
-            dd({match})
+            dd({mask})
         }
     }
 }

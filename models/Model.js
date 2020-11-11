@@ -125,11 +125,11 @@ class Model {
         return data
     }
 
-    renameObjectKeys(a = {}, keymap = {}, func){
+    renameKeys(a = {}, func){
         const b = {}
         for(let k in a){
             let v = a[k]
-            k = keymap[k] || k
+            k = this.keymap[k] || k
             if(func) v = func(k, v) 
             b[k] = v
         }

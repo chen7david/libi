@@ -3,8 +3,8 @@ module.exports = {
         title: 'name',
         first_air_date: 'year',
         release_date: 'year',
-        season_number: '{s}',
-        episode_number: '{e}',
+        season_number: 's',
+        episode_number: 'e',
     },
     mask: {
         movie: {

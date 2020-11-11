@@ -8,12 +8,9 @@ const Libi = require('./index')({
 })
 
 const library = Libi('shows')
-// dd(library)
 const run = async () => {
     const res = await library.import()
-
-    // const res = await library.findOne('moana')
-    dd(res)
+    // dd(res)
 }
 
 run()

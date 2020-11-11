@@ -15,8 +15,12 @@ class Movie extends Model {
             const search = id || movie || query, options = {}
             if(year) options.year = year
             const match = await this.findOne(search, options)
-            // const mask = this.getMask({movie, file:item})
-            dd({match})
+            const mask = this.renameKeys(match, (k, v) => {
+                /* MUTATE OBJECT VALUES */
+                if(k == 'year') v = new Date(v).getFullYear()
+                return v
+            })
+            dd({mask})
         }
     }
 
