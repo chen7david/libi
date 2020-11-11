@@ -6,7 +6,6 @@ const { deburr, padStart } = require('lodash')
 const defaults = require('./default')
 const { regex, mutator, junk } = require('stringspector')
 const inspector = require('stringspector')({ regex, mutator, junk })
-
 Hotfile.prototype.analyze = function () {
     const string = this.name
     const metadata = inspector.loadString(string).filter().inspect().get()
@@ -47,15 +46,12 @@ class Library {
         let match = null, matches = null
         if(isNumer) match = await this.http().withId(name).get()
         if(!match){
-            dd({options})
             matches = await this.http().search(name, options)
             match = matches.length > 0 ? matches[0] : null
-            dd({matches, match, name})
         }
         if(!match) {
             matches = await this.tmdb().search(name, options)
             match = matches.length > 0 ? await this.tmdb().withId(matches[0].id).get() : null
-            dd({x:'trying tmdb', name, match})
         }
         return match 
     }
@@ -75,18 +71,28 @@ class Library {
             .then(() => true).catch(() => false)
     }
 
+    async import(){
+        const x = await this.mkdir(this.homePath())
+        const y = await this.mkdir(this.watchPath())
+        const items = await this.scanFolder(this.watchPath())
+        const matches = await this.matchFiles(items)
+        // dd({matches})
+        return items
+    }
+
     async matchFiles(items){
         const matches = []
         for(let item of items){
             const match = this.findFileMatch(item)
-            if(match) matches.push(match)
+            // if(match) matches.push(match)
         }
         return matches
     }
 
     async findFileMatch(item){
+        const { movie, show, episode, year, id, query } = item.analyze()
         let search = null
-        const { movie, show, episode, year, id, query} = item.analyze()
+        const options = {}
         switch (this.mediaType) {
             case 'movies':
                 search = id || movie || query
@@ -97,24 +103,8 @@ class Library {
             default:
                 break;
         }
-        
-        const match = await this.findOne(search, {year})
-        // dd({search, year, match})
-    }
-
-    async scanFolder(path){
-        return await Hotfile.map(path,{
-            exclude: /(^|\/)\.[^\/\.]/g,
-        })
-    }
-
-    async import(){
-        await this.mkdir(this.homePath())
-        await this.mkdir(this.watchPath())
-        const items = await this.scanFolder(this.watchPath())
-        const matches = await this.matchFiles(items)
-        // dd({matches})
-        return items
+        if(year) options.year = year
+        const match = await this.findOne(search, options)
     }
 
     /* PROCESS QUEUE METHODS */
@@ -122,6 +112,12 @@ class Library {
     addToQueue(item){
         this.queue.push(item)
         return this
+    }
+
+    async scanFolder(path){
+        return await Hotfile.map(path,{
+            exclude: /(^|\/)\.[^\/\.]/g,
+        })
     }
 
     getMask(data){

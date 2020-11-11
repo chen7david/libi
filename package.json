@@ -22,6 +22,6 @@
     "hotfile": "0.0.3",
     "lodash": "^4.17.20",
     "meta-agent": "0.0.6",
-    "stringspector": "0.0.1"
+    "stringspector": "0.0.2"
   }
 }
