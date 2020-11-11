@@ -1,11 +1,10 @@
 const dd = (val) => console.log(val)
 const p = require('path')
-const agent = require('meta-agent')({
-    baseURL: 'http://192.168.50.251:8000',
-})
 const Libi = require('./index')({
     homedir: p.resolve('/Users/david/Desktop/media'),
-    agent,
+    agent: require('meta-agent')({
+        baseURL: 'http://192.168.50.251:8000',
+    })
 })
 
 const library = Libi('shows')
