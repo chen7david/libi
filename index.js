@@ -47,11 +47,15 @@ class Library {
         let match = null, matches = null
         if(isNumer) match = await this.http().withId(name).get()
         if(!match){
+            dd({options})
             matches = await this.http().search(name, options)
             match = matches.length > 0 ? matches[0] : null
-        }else if(!match) {
+            dd({matches, match, name})
+        }
+        if(!match) {
             matches = await this.tmdb().search(name, options)
-            match = matches.length > 0 ? await this.http().withId(matches[0].id).get() : null
+            match = matches.length > 0 ? await this.tmdb().withId(matches[0].id).get() : null
+            dd({x:'trying tmdb', name, match})
         }
         return match 
     }
@@ -71,11 +75,45 @@ class Library {
             .then(() => true).catch(() => false)
     }
 
+    async matchFiles(items){
+        const matches = []
+        for(let item of items){
+            const match = this.findFileMatch(item)
+            if(match) matches.push(match)
+        }
+        return matches
+    }
+
+    async findFileMatch(item){
+        let search = null
+        const { movie, show, episode, year, id, query} = item.analyze()
+        switch (this.mediaType) {
+            case 'movies':
+                search = id || movie || query
+                break;
+            case 'shows':
+                search = id || show || query
+                break;
+            default:
+                break;
+        }
+        
+        const match = await this.findOne(search, {year})
+        // dd({search, year, match})
+    }
+
+    async scanFolder(path){
+        return await Hotfile.map(path,{
+            exclude: /(^|\/)\.[^\/\.]/g,
+        })
+    }
+
     async import(){
         await this.mkdir(this.homePath())
         await this.mkdir(this.watchPath())
-        const items = await Hotfile.map(this.watchPath())
-
+        const items = await this.scanFolder(this.watchPath())
+        const matches = await this.matchFiles(items)
+        // dd({matches})
         return items
     }
 

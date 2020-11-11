@@ -7,16 +7,17 @@ const Libi = require('./index')({
     })
 })
 
-const library = Libi('shows')
+const library = Libi('movies')
 
 const run = async () => {
-    // const items = await library.import()
-    const res = await library.findOne('85948')
-    dd(res)
+    const items = await library.import()
+
+    // const res = await library.http().search('nemo')
+    // dd(res)
 }
 
-const string = true ? 'hello' : '56470'
-dd(/^\d+$/.test(string))
+// const string = true ? 'hello' : '56470'
+// dd(/^\d+$/.test(string))
 
-run()
+// run()
 // dd(library)
