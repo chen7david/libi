@@ -26,7 +26,6 @@ class Library {
             homedir: p.join(options.homedir + '/' + '@public', this.name),
             watchdir: p.join(options.watchdir || options.homedir, this.name),
         }
-        this.http = options.http
         this.graph = []
         this.queue = []
     }
@@ -34,13 +33,13 @@ class Library {
     /* AGENT METHODS */
 
     http(){
-        if(this.mediaType == 'movies') return agent.movies()
-        if(this.mediaType == 'shows') return agent.shows()
+        if(this.mediaType == 'movies') return this.agent.movies()
+        if(this.mediaType == 'shows') return this.agent.shows()
     }
 
     tmdb(){
-        if(this.mediaType == 'movies') return agent.tmdb().movies()
-        if(this.mediaType == 'shows') return agent.tmdb().shows()
+        if(this.mediaType == 'movies') return this.agent.tmdb().movies()
+        if(this.mediaType == 'shows') return this.agent.tmdb().shows()
     }
 
     async findOne(name, options = {}){
