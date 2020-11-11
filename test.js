@@ -10,9 +10,9 @@ const Libi = require('./index')({
 const library = Libi('movies')
 
 const run = async () => {
-    // const res = await library.import()
+    const res = await library.import()
 
-    const res = await library.findOne('moana')
+    // const res = await library.findOne('moana')
     dd(res)
 }
 
@@ -21,3 +21,6 @@ const run = async () => {
 
 run()
 // dd(library)
+
+
+// import -> matchFiles -> findFileMatch -> findOne

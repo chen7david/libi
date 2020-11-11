@@ -76,15 +76,14 @@ class Library {
         const y = await this.mkdir(this.watchPath())
         const items = await this.scanFolder(this.watchPath())
         const matches = await this.matchFiles(items)
-        // dd({matches})
-        return items
+        return matches
     }
 
     async matchFiles(items){
         const matches = []
         for(let item of items){
-            const match = this.findFileMatch(item)
-            // if(match) matches.push(match)
+            const match = await this.findFileMatch(item)
+            if(match) matches.push({item, match})
         }
         return matches
     }
@@ -104,7 +103,7 @@ class Library {
                 break;
         }
         if(year) options.year = year
-        const match = await this.findOne(search, options)
+        return await this.findOne(search, options)
     }
 
     /* PROCESS QUEUE METHODS */
