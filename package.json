@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon test.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/chen7david/libi/issues"
   },
-  "homepage": "https://github.com/chen7david/libi#readme"
+  "homepage": "https://github.com/chen7david/libi#readme",
+  "dependencies": {
+    "hotfile": "0.0.3",
+    "lodash": "^4.17.20",
+    "stringspector": "0.0.1"
+  }
 }

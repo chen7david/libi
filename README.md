@@ -6,7 +6,7 @@ const p = require('path')
 const Libi = require('libi')({
     homedir: p.resolve(__dirname, /* some path*/),
     watchdir: p.resolve(__dirname, /* some path*/), // optional
-    http: 'meta-agent',
+    agent: 'meta-agent',
     mask: require('./mask'), // optional
     keymap: require('./keymap') // optional
 })

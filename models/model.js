@@ -3,13 +3,12 @@ const p = require('path')
 const fs = require('fs')
 const Hotfile = require('hotfile')
 const { deburr, padStart } = require('lodash')
-const defaults = require('./default')
+const defaults = require('./../default')
 const { regex, mutator, junk } = require('stringspector')
 const inspector = require('stringspector')({ regex, mutator, junk })
 
 Hotfile.prototype.analyze = function () {
-    const string = this.name
-    const metadata = inspector.loadString(string).filter().inspect().get()
+    const metadata = inspector.loadString(this.name).filter().inspect().get()
     Object.assign(this, metadata)
     return this
 }
@@ -17,7 +16,6 @@ Hotfile.prototype.analyze = function () {
 class Library {
     constructor(options){
         this.name = options.name
-        this.agent = options.agent
         this.mediaType = options.mediaType
         this.stat = {}
         this.mask = Object.assign(defaults.mask, options.mask)
@@ -32,32 +30,23 @@ class Library {
     }
 
     /* AGENT METHODS */
-
-    http(){
-        if(this.mediaType == 'movies') return agent.movies()
-        if(this.mediaType == 'shows') return agent.shows()
+    async search(name, options = {}){
+        return await this.http().search(name, options)
     }
 
-    tmdb(){
-        if(this.mediaType == 'movies') return agent.tmdb().movies()
-        if(this.mediaType == 'shows') return agent.tmdb().shows()
+    async $search(name, options = {}){
+        return await this.$http().search(name, options = {})
     }
 
-    async findOne(name, options = {}){
-        let isNumer = /^\d+$/.test(name)
-        let match = null, matches = null
-        if(isNumer) match = await this.http().withId(name).get()
-        if(!match){
-            matches = await this.http().search(name, options)
-            match = matches.length > 0 ? matches[0] : null
-        }else if(!match) {
-            matches = await this.tmdb().search(name, options)
-            match = matches.length > 0 ? await this.http().withId(matches[0].id).get() : null
+    async findMatch(name, options = {}){
+        let matches = await this.search(name, options)
+        let match = matches.length > 0 ? matches[0] : null
+        if(!match) {
+            matches = await this.$search(name, options)
+            match = matches.length > 0 ? await this.$http().withId(matches[0].id).get() : null
         }
         return match 
     }
-
-    /* FILE SYSTEM METHODS */
 
     homePath(){
         return this.path.homedir
@@ -67,20 +56,19 @@ class Library {
         return this.path.watchdir
     }
 
-    async mkdir(path){
-        return fs.promises.mkdir(path, { recursive: true })
-            .then(() => true).catch(() => false)
+    async scanFolder(path){
+        return await Hotfile.map(path,{
+            exclude: /(^|\/)\.[^\/\.]/g,
+        })
     }
 
     async import(){
         await this.mkdir(this.homePath())
         await this.mkdir(this.watchPath())
-        const items = await Hotfile.map(this.watchPath())
+        const items = await this.scanFolder(this.watchPath())
 
         return items
     }
-
-    /* PROCESS QUEUE METHODS */
 
     addToQueue(item){
         this.queue.push(item)
@@ -105,6 +93,13 @@ class Library {
             return v
         })
         return rendered
+    }
+
+    /* private functions */
+
+    async mkdir(path){
+        return fs.promises.mkdir(path, { recursive: true })
+            .then(() => true).catch(() => false)
     }
 
     mapkeys(data, object, func){
@@ -132,6 +127,8 @@ class Library {
         return b
     }
 }
+
+module.exports = Library
 
 module.exports = (options = {}) => (type, name) => {
     if(!type) throw('library name is required!')
