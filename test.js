@@ -7,8 +7,8 @@ const Libi = require('./index')({
     })
 })
 
-const library = Libi('movies')
-
+const library = Libi('shows')
+// dd(library)
 const run = async () => {
     const res = await library.import()
 
@@ -16,11 +16,4 @@ const run = async () => {
     dd(res)
 }
 
-// const string = true ? 'hello' : '56470'
-// dd(/^\d+$/.test(string))
-
 run()
-// dd(library)
-
-
-// import -> matchFiles -> findFileMatch -> findOne
