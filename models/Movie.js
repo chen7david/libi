@@ -19,7 +19,6 @@ class Movie extends Model {
             if(type != 'subtitle'){
                 await item.moveTo(MovieFolder, movie.file)
             }else{
-                // await item.moveTo(MovieFolder, movie.subtitle)
                 if(lang){
                     const toPath = p.join(MovieFolder.path, movie.subtitle)
                     this.tovtt(item.path, toPath)
@@ -28,7 +27,6 @@ class Movie extends Model {
         }
         this.clearCache()
         this.clearQueue()
-        dd('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
     }
 }
 

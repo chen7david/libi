@@ -9,6 +9,5 @@ module.exports = (options = {}) => (type, name) => {
     if(!types.includes(type))
         throw(`media type ${type} is not supported! the ${types.length} supported types are: ` + types.join(', ') + '.')
     options.name = name || type
-    options.mediaType = type
     return new models[type](options)
 }

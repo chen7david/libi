@@ -19,8 +19,7 @@ class Model {
     constructor(options){
         this.name = options.name
         this.agent = options.agent
-        this.mediaType = options.mediaType
-        this.stat = {}
+        this.state = {}
         this.mask = Object.assign(defaults.mask, options.mask)
         this.keymap = Object.assign(defaults.keymap, options.keymap)
         this.graph = []
@@ -36,6 +35,10 @@ class Model {
         this.mkdirSync(this.watchPath())
         this.homeFolder = new Hotfile(this.homePath())
     } 
+
+    className(){
+        return this.constructor.name.toLowerCase()
+    }
     
     getHotfile(path){
         return new Hotfile(path)
@@ -65,10 +68,11 @@ class Model {
         const items = await this.scandir(this.watchPath())
         for(let item of items){
             const { year, id, query } = item.analyze()
-            const search = id || item[this.constructor.name.toLowerCase()] || query, options = {}
+            const search = id || item[this.className()] || query, options = {}
             if(year) options.year = year
             let match = await this.findOne(search, options)
             if(!match) continue
+            if(this.className() == 'show') dd('is show')
             match = this.renameKeys(match, (k, v) => {
                 /* MUTATE MATCH OBJECT VALUES */
                 if(k == 'year') v = new Date(v).getFullYear()
@@ -82,7 +86,7 @@ class Model {
         }
         return this
     }
-
+    
     async createCase(item){
         const { movie, year, id, query, lang, ext, type } = item
             const search = id || movie || query, options = {}
