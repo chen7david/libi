@@ -69,7 +69,7 @@ class Model {
                 if(k == 'year') v = new Date(v).getFullYear()
                 return v
             })
-            const files = this.filesThrough(item).map(f => Object.assign(f, {id: match.id}))
+            const files = this.filesThrough(item,  {id: match.id})
             this.addToCache(match)
             this.addToQueue(files)
         }
@@ -116,16 +116,16 @@ class Model {
         return await Hotfile.map(path,{exclude: /(^|\/)\.[^\/\.]/g})
     }
 
-    filesThrough(item){
+    filesThrough(item, object = {}){
         const files = []
         function extract(item){
             if(item.isDirectory) {
                 for(let child of item.children) extract(child)
             }else{
-                files.push(item)
+                files.push(Object.assign(item,object))
             }
         }
-        extract(item)
+        extract(item, object)
         return files
     }
 
