@@ -59,22 +59,19 @@ class Model {
     async import(){
         const items = await this.scandir(this.watchPath())
         for(let item of items){
-            const { movie, year, id, query, lang, ext, type } = item.analyze()
+            const { year, id, query } = item.analyze()
             const search = id || item[this.constructor.name.toLowerCase()] || query, options = {}
             if(year) options.year = year
             let match = await this.findOne(search, options)
             if(!match) continue
-            Object.assign(match, lang ? {lang} : {}, ext ? {ext} : {})
             match = this.renameKeys(match, (k, v) => {
                 /* MUTATE MATCH OBJECT VALUES */
                 if(k == 'year') v = new Date(v).getFullYear()
                 return v
             })
-            const mask = this.renderMask(this.mask, match)
-            const files = this.filesThrough(item).map(f => this.addToQueue(fObject.assign(f, {id: match.id}, {mask})))
-            dd({files})
+            const files = this.filesThrough(item).map(f => Object.assign(f, {id: match.id}))
             this.addToCache(match)
-            // this.addToQueue(files)
+            this.addToQueue(files)
         }
         return this
     }
@@ -106,7 +103,7 @@ class Model {
     }
 
     addToQueue(item){
-       Array.isArray(item) ? this.queue.concat(item) : this.queue.push(item)
+       Array.isArray(item) ? this.queue = this.queue.concat(item) : this.queue.push(item)
         return this
     }
 
