@@ -22,4 +22,3 @@ module.exports = {
         }, 
     }
 }
-function addToLang(row){ const data }
