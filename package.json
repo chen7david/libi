@@ -19,9 +19,10 @@
   "homepage": "https://github.com/chen7david/libi#readme",
   "dependencies": {
     "axios": "^0.21.0",
-    "hotfile": "0.0.5",
+    "hotfile": "0.0.6",
     "lodash": "^4.17.20",
     "meta-agent": "0.0.6",
-    "stringspector": "0.0.4"
+    "stringspector": "0.0.4",
+    "subsrt": "^1.1.1"
   }
 }

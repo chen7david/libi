@@ -11,8 +11,8 @@ module.exports = {
     mask: {
         movie: {
             folder: 'name (year)',
-            file: 'name.ext',
-            subtitle: 'name.lang.ext',
+            file: 'name (year).ext',
+            subtitle: 'name (year).lang.vtt',
         },
         show: {
             folder: 'name (year)'
@@ -22,7 +22,7 @@ module.exports = {
         },
         episode: {
             file: 'S{s}E{e} - name.ext',
-            subtitle: 'name.lang.ext',
+            subtitle: 'name.lang.vtt',
         },
     }
 }

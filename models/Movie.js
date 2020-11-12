@@ -1,4 +1,5 @@
 const Model = require('./Model')
+const p = require('path')
 const dd = (val) => console.log(val)
 
 class Movie extends Model {
@@ -18,7 +19,11 @@ class Movie extends Model {
             if(type != 'subtitle'){
                 await item.moveTo(MovieFolder, movie.file)
             }else{
-                await item.moveTo(MovieFolder, movie.subtitle)
+                // await item.moveTo(MovieFolder, movie.subtitle)
+                if(lang){
+                    const toPath = p.join(MovieFolder.path, movie.subtitle)
+                    this.tovtt(item.path, toPath)
+                }
             }
         }
         this.clearCache()

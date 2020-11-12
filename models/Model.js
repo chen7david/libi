@@ -6,6 +6,7 @@ const { pick } = require('lodash')
 const defaults = require('./../default')
 const inspectorConfig = require('stringspector')
 const inspector = require('stringspector')(inspectorConfig)
+const subsrt = require('subsrt')
 
 Hotfile.prototype.analyze = function () {
     const string = this.basename
@@ -71,6 +72,7 @@ class Model {
             match = this.renameKeys(match, (k, v) => {
                 /* MUTATE MATCH OBJECT VALUES */
                 if(k == 'year') v = new Date(v).getFullYear()
+                if(k == 'name') v = v.replace(/:/g,' -')
                 return v
             })
             const files = this.filesThrough(item,  {id: match.id})
@@ -167,6 +169,16 @@ class Model {
             b[k] = v
         }
         return b
+    }
+
+    tovtt(fromPath, toPath){
+        try {
+            const input = fs.readFileSync(fromPath, 'utf8')
+            const convereted = subsrt.convert(input, { format: 'vtt' })
+            fs.writeFileSync(toPath, convereted)
+        } catch (err) {
+            dd({fromPath, err})
+        }
     }
 }
 
