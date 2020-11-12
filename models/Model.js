@@ -2,7 +2,7 @@ const dd = (val) => console.log(val)
 const p = require('path')
 const fs = require('fs')
 const Hotfile = require('hotfile')
-const { padStart } = require('lodash')
+const { padStart, pick } = require('lodash')
 const defaults = require('./../default')
 const inspectorConfig = require('stringspector')
 const { id } = require('stringspector/regex')
@@ -103,6 +103,7 @@ class Model {
 
     renderMask(mask, object){
         let string = JSON.stringify(mask)
+        object = pick(object, Object.values(this.keymap))
         Object.keys(object).map(key => {
             let value = object[key]
             let regex = new RegExp(`${key}`,'g')
