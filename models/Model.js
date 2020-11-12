@@ -71,14 +71,21 @@ class Model {
             const search = id || item[this.className()] || query, options = {}
             if(year) options.year = year
             let match = await this.findOne(search, options)
+            
             if(!match) continue
-            if(this.className() == 'show') dd('is show')
+
+            if(this.className() == 'show'){
+                match = await this.http().withId(match.id).get() 
+                match.episodes = match.seasons.map(s => s.episodes).reduce((acc, curr) => acc.concat(curr))
+            }
+
             match = this.renameKeys(match, (k, v) => {
                 /* MUTATE MATCH OBJECT VALUES */
                 if(k == 'year') v = new Date(v).getFullYear()
                 if(k == 'name') v = v.replace(/:/g,' -')
                 return v
             })
+
             const files = this.filesThrough(item,  {id: match.id})
             this.addToCache(match)
             this.addToQueue(files)
