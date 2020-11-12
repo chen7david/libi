@@ -28,12 +28,19 @@ class Show extends Model {
     //     }
     // }
 
+    normalizeString(string){
+        return string.toLowerCase().match(/[\w'-]+/g)
+    }
+
     async processQueue(){
         for(let item of this.queue){
-            const { id, lang, ext, type } = item.analyze()
-            dd({item})
-            // const match = this.getFromCache(id)
-            // Object.assign(match, lang ? {lang} : {}, ext ? {ext} : {})
+            const { id, lang, ext, type, e, s, query } = item.analyze()
+            let show = this.getFromCache(id) 
+            let episode = item.episode ? 
+                show.episodes.find(e => e.season_number == item.episode.s && e.episode_number == item.episode.e) :
+                show.episodes.find(ep => this.normalizeString(ep.name).every(k => item.basename.toLowerCase().match(/[\w'-]+/g).join(' ').includes(k)))
+            if(episode)dd({item})
+            // Object.assign(show, lang ? {lang} : {}, ext ? {ext} : {})
             // const { movie } = this.renderMask(this.mask, match)
             // const MovieFolder = await this.homeFolder.createChildDir(movie.folder)
             // if(type != 'subtitle'){

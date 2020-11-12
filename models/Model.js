@@ -67,11 +67,12 @@ class Model {
     async import(){
         const items = await this.scandir(this.watchPath())
         for(let item of items){
+            dd({item})
             const { year, id, query } = item.analyze()
             const search = id || item[this.className()] || query, options = {}
             if(year) options.year = year
             let match = await this.findOne(search, options)
-            
+
             if(!match) continue
 
             if(this.className() == 'show'){
