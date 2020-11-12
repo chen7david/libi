@@ -56,7 +56,7 @@ class Model {
     }
 
     async import(){
-        const items = await this.scanFolder(this.watchPath())
+        const items = await this.scandir(this.watchPath())
         for(let item of items){
             item.analyze()
             await this.processBatch(item)
@@ -82,10 +82,8 @@ class Model {
             .then(() => true).catch(() => false)
     }
 
-    async scanFolder(path){
-        return await Hotfile.map(path,{
-            exclude: /(^|\/)\.[^\/\.]/g,
-        })
+    async scandir(path){
+        return await Hotfile.map(path,{exclude: /(^|\/)\.[^\/\.]/g})
     }
 
     filesThrough(item){

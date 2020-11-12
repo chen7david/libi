@@ -1,7 +1,7 @@
 const dd = (val) => console.log(val)
 const p = require('path')
 const Libi = require('./index')({
-    homedir: p.resolve('/Users/davidchen/Desktop/media'),
+    homedir: p.resolve('/Users/david/Desktop/media'),
     agent: require('meta-agent')({
         baseURL: 'http://192.168.50.251:8000',
     })
