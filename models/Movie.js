@@ -21,7 +21,8 @@ class Movie extends Model {
                 return v
             })
             const mask = this.renderMask(this.mask, match)
-            dd({mask})
+            const files = this.filesThrough(item) 
+            dd({mask, files})
     }
 }
 

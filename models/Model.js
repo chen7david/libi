@@ -59,9 +59,41 @@ class Model {
     async import(){
         const items = await this.scandir(this.watchPath())
         for(let item of items){
-            item.analyze()
-            await this.createBatch(item)
+            const { movie, year, id, query, lang, ext, type } = item.analyze()
+            const search = id || item[this.constructor.name.toLowerCase()] || query, options = {}
+            if(year) options.year = year
+            let match = await this.findOne(search, options)
+            if(!match) continue
+            Object.assign(match, lang ? {lang} : {}, ext ? {ext} : {})
+            match = this.renameKeys(match, (k, v) => {
+                /* MUTATE MATCH OBJECT VALUES */
+                if(k == 'year') v = new Date(v).getFullYear()
+                return v
+            })
+            const mask = this.renderMask(this.mask, match)
+            const files = this.filesThrough(item).map(f => this.addToQueue(fObject.assign(f, {id: match.id}, {mask})))
+            dd({files})
+            this.addToCache(match)
+            // this.addToQueue(files)
         }
+        return this
+    }
+
+    async createCase(item){
+        const { movie, year, id, query, lang, ext, type } = item
+            const search = id || movie || query, options = {}
+            if(year) options.year = year
+            let match = await this.findOne(search, options)
+            if(!match) return null
+            
+            match = this.renameKeys(match, (k, v) => {
+                /* MUTATE MATCH OBJECT VALUES */
+                if(k == 'year') v = new Date(v).getFullYear()
+                return v
+            })
+            const mask = this.renderMask(this.mask, match)
+            const files = this.filesThrough(item)
+            dd({mask, files})
     }
 
     addToCache(item){
@@ -74,7 +106,7 @@ class Model {
     }
 
     addToQueue(item){
-        this.queue.push(item)
+       Array.isArray(item) ? this.queue.concat(item) : this.queue.push(item)
         return this
     }
 
@@ -91,11 +123,12 @@ class Model {
         const files = []
         function extract(item){
             if(item.isDirectory) {
-                ectract(item)
+                for(let child of item.children) extract(child)
             }else{
                 files.push(item)
             }
         }
+        extract(item)
         return files
     }
 
