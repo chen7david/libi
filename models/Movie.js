@@ -10,26 +10,17 @@ class Movie extends Model {
 
     async processQueue(){
         for(let item of this.queue){
-            const { movie, year, id, query, lang, ext, type } = item.analyze()
+            const { id, lang, ext, type } = item.analyze()
             const match = this.getFromCache(id)
             Object.assign(match, lang ? {lang} : {}, ext ? {ext} : {})
-            const mask = this.renderMask(this.mask, match)
-            dd({movie, year, id, query, lang, ext, type, match, mask})
+            const { movie } = this.renderMask(this.mask, match)
+            const MovieFolder = await this.homeFolder.createChildDir(movie.folder)
+            if(type != 'subtitle'){
+                await item.moveTo(MovieFolder, movie.file)
+            }else{
+                await item.moveTo(MovieFolder, movie.subtitle)
+            }
         }
-        // const { movie, year, id, query, lang, ext, type } = item.analyze()
-        //     const search = id || movie || query, options = {}
-        //     if(year) options.year = year
-        //     let match = await this.findOne(search, options)
-        //     if(!match) return null
-        //     Object.assign(match, lang ? {lang} : {}, ext ? {ext} : {})
-        //     match = this.renameKeys(match, (k, v) => {
-        //         /* MUTATE MATCH OBJECT VALUES */
-        //         if(k == 'year') v = new Date(v).getFullYear()
-        //         return v
-        //     })
-        //     const mask = this.renderMask(this.mask, match)
-        //     const files = this.filesThrough(item) 
-        //     dd({mask, files})
         this.clearCache()
         this.clearQueue()
         dd('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')

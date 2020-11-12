@@ -2,10 +2,9 @@ const dd = (val) => console.log(val)
 const p = require('path')
 const fs = require('fs')
 const Hotfile = require('hotfile')
-const { padStart, pick } = require('lodash')
+const { pick } = require('lodash')
 const defaults = require('./../default')
 const inspectorConfig = require('stringspector')
-const { id } = require('stringspector/regex')
 const inspector = require('stringspector')(inspectorConfig)
 
 Hotfile.prototype.analyze = function () {
@@ -34,7 +33,12 @@ class Model {
         this.watchPath = () => this.path.watchdir
         this.mkdirSync(this.homePath())
         this.mkdirSync(this.watchPath())
-    }   
+        this.homeFolder = new Hotfile(this.homePath())
+    } 
+    
+    getHotfile(path){
+        return new Hotfile(path)
+    }
     
     mkdirSync(path){
         try {fs.mkdirSync(path, {recursive: true}); return true} 
