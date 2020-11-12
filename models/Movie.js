@@ -10,7 +10,7 @@ class Movie extends Model {
 
     async createBatch(item){
         const { movie, year, id, query } = item
-            dd(item)
+            // dd(item)
             const search = id || movie || query, options = {}
             if(year) options.year = year
             let match = await this.findOne(search, options)
@@ -19,7 +19,7 @@ class Movie extends Model {
                 if(k == 'year') v = new Date(v).getFullYear()
                 return v
             })
-            dd({match})
+            // dd({match})
     }
 }
 

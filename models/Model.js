@@ -4,12 +4,13 @@ const fs = require('fs')
 const Hotfile = require('hotfile')
 const { padStart } = require('lodash')
 const defaults = require('./../default')
-const { regex, mutator, junk } = require('stringspector')
-const inspector = require('stringspector')({ regex, mutator, junk })
+const inspectorConfig = require('stringspector')
+const inspector = require('stringspector')(inspectorConfig)
 
 Hotfile.prototype.analyze = function () {
-    const string = this.name
+    const string = this.basename
     const metadata = inspector.loadString(string).filter().inspect().get()
+    dd({metadata})
     Object.assign(this, metadata)
     return this
 }
