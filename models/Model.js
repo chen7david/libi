@@ -59,7 +59,7 @@ class Model {
         const items = await this.scandir(this.watchPath())
         for(let item of items){
             item.analyze()
-            await this.processBatch(item)
+            await this.createBatch(item)
         }
     }
 

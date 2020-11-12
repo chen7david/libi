@@ -8,17 +8,18 @@ class Movie extends Model {
         this.tmdb = () => this.agent.tmdb().movies()
     }
 
-    async processBatch(item){
+    async createBatch(item){
         const { movie, year, id, query } = item
+            dd(item)
             const search = id || movie || query, options = {}
             if(year) options.year = year
-            const match = await this.findOne(search, options)
-            const mask = this.renameKeys(match, (k, v) => {
+            let match = await this.findOne(search, options)
+            match = this.renameKeys(match, (k, v) => {
                 /* MUTATE MATCH OBJECT VALUES */
                 if(k == 'year') v = new Date(v).getFullYear()
                 return v
             })
-            dd({mask})
+            dd({match})
     }
 }
 
