@@ -55,6 +55,14 @@ class Model {
         return match 
     }
 
+    async import(){
+        const items = await this.scanFolder(this.watchPath())
+        for(let item of items){
+            item.analyze()
+            await this.processBatch(item)
+        }
+    }
+
     addToCache(item){
         if(this.getFromCache(item.id)) return true
         this.cache.push(item)

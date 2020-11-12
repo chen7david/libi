@@ -8,22 +8,18 @@ class Movie extends Model {
         this.tmdb = () => this.agent.tmdb().movies()
     }
 
-    async import(){
-        const items = await this.scanFolder(this.watchPath())
-        for(let item of items){
-            const { movie, year, id, query } = item.analyze()
+    async processBatch(item){
+        const { movie, year, id, query } = item
             const search = id || movie || query, options = {}
             if(year) options.year = year
             const match = await this.findOne(search, options)
             const mask = this.renameKeys(match, (k, v) => {
-                /* MUTATE OBJECT VALUES */
+                /* MUTATE MATCH OBJECT VALUES */
                 if(k == 'year') v = new Date(v).getFullYear()
                 return v
             })
             dd({mask})
-        }
     }
-
 }
 
 module.exports = Movie
