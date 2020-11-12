@@ -72,6 +72,7 @@ class Model {
             const files = this.filesThrough(item,  {id: match.id})
             this.addToCache(match)
             this.addToQueue(files)
+            await this.processQueue() 
         }
         return this
     }
@@ -102,8 +103,18 @@ class Model {
         return this.cache.find(e => e.id == id)
     }
 
+    clearCache(){
+        this.cache = []
+        return this
+    }
+
     addToQueue(item){
        Array.isArray(item) ? this.queue = this.queue.concat(item) : this.queue.push(item)
+        return this
+    }
+
+    clearQueue(){
+        this.queue = []
         return this
     }
 

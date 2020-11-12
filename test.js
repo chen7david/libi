@@ -12,7 +12,7 @@ const library = Libi('movies')
 
 const run = async () => {
     const res = await library.import()
-    dd(res)
+    // dd(res)
 }
 
 run()

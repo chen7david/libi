@@ -5,12 +5,14 @@ module.exports = {
         release_date: 'year',
         season_number: '{s}',
         episode_number: '{e}',
-        ext: 'ext'
+        ext: 'ext',
+        lang: 'lang'
     },
     mask: {
         movie: {
             folder: 'name (year)',
             file: 'name.ext',
+            subtitle: 'name.lang.ext',
         },
         show: {
             folder: 'name (year)'
@@ -20,6 +22,7 @@ module.exports = {
         },
         episode: {
             file: 'S{s}E{e} - name.ext',
+            subtitle: 'name.lang.ext',
         },
     }
 }
