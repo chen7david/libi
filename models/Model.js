@@ -5,12 +5,12 @@ const Hotfile = require('hotfile')
 const { padStart } = require('lodash')
 const defaults = require('./../default')
 const inspectorConfig = require('stringspector')
+const { id } = require('stringspector/regex')
 const inspector = require('stringspector')(inspectorConfig)
 
 Hotfile.prototype.analyze = function () {
     const string = this.basename
     const metadata = inspector.loadString(string).filter().inspect().get()
-    dd({metadata})
     Object.assign(this, metadata)
     return this
 }
@@ -101,35 +101,15 @@ class Model {
 
     /* Mask Manager */
 
-    getMask(data){
-        const { ext, lang } = data.file
-        const m = this.mapkeys(data, { ext, lang }, (k, v) => {
-            if(k == 'year') v = new Date(v).getFullYear()
-            if(k == defaults.keymap['season_number']) v = padStart(v,2,'0')
-            if(k == defaults.keymap['episode_number']) v = padStart(v,3,'0')
-            return v
+    renderMask(mask, object){
+        let string = JSON.stringify(mask)
+        Object.keys(object).map(key => {
+            let value = object[key]
+            let regex = new RegExp(`${key}`,'g')
+            if(key == 'ext') value = value.replace('.', '')
+            string = string.replace(regex, value)
         })
-        const rendered = this.renameObjectKeys(this.mask,{}, (k, v) => {
-                const match = m[k]
-                for(let i in v){
-                    let string = v[i]
-                    for(let key in match) string = string.replace(key, match[key])
-                    v[i] = string
-                }
-            return v
-        })
-        return rendered
-    }
-
-    mapkeys(data, object, func){
-        return this.renameObjectsKeys(data, this.keymap, object, func)
-    }
-
-    renameObjectsKeys(data, keymap = {}, func){
-        for(let key in data){
-            data[key] = this.renameObjectKeys(data[key], keymap, func)
-        }
-        return data
+        return JSON.parse(string)
     }
 
     renameKeys(a = {}, func){
