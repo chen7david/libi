@@ -98,6 +98,17 @@ class Model {
         
         return this
     }
+
+    async moveFile(item, mask, toFolder){
+        if(item.type != 'subtitle'){
+            await item.moveTo(toFolder, mask.file)
+        }else{
+            if(item.lang){
+                const toPath = p.join(toFolder.path, mask.subtitle)
+                this.tovtt(item.path, toPath)
+            }
+        }
+    }
     
     async createCase(item){
         const { movie, year, id, query, lang, ext, type } = item

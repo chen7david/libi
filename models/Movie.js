@@ -15,14 +15,15 @@ class Movie extends Model {
             const match = this.getFromCache(id)
             Object.assign(match, lang ? {lang} : {}, ext ? {ext} : {})
             const { movie } = this.renderMask(this.mask, match)
-            if(type != 'subtitle'){
-                await item.moveTo(Folder, movie.file)
-            }else{
-                if(lang){
-                    const toPath = p.join(Folder.path, movie.subtitle)
-                    this.tovtt(item.path, toPath)
-                }
-            }
+            await this.moveFile(item, movie, Folder)
+            // if(type != 'subtitle'){
+            //     await item.moveTo(Folder, movie.file)
+            // }else{
+            //     if(lang){
+            //         const toPath = p.join(Folder.path, movie.subtitle)
+            //         this.tovtt(item.path, toPath)
+            //     }
+            // }
         }
         this.clearCache()
         this.clearQueue()
