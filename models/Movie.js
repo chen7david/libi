@@ -29,13 +29,13 @@ class Movie extends Model {
             let movie = this.getFromCache(id)
             const object = {}
             if(type == 'video'){
-                object.type = 'text/vtt'
+                object.type = 'video/mp4'
                 object.src = '/' + takeRight(item.path.split('/'),2).join('/')
                 movie.videos.push(object)
             }
             if(type == 'subtitle') {
+                object.type = 'text/vtt'
                 object.lang = lang
-                object.type = 'video/mp4'
                 object.src = '/' + takeRight(item.path.split('/'),2).join('/')
                 movie.subtitles.push(object)
             }

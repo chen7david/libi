@@ -47,13 +47,13 @@ class Show extends Model {
             if(!episode.videos) Object.assign(episode, {videos:[], subtitles:[]})
             const object = {}
             if(type == 'video'){
-                object.type = 'text/vtt'
+                object.type = 'video/mp4'
                 object.src = '/' + takeRight(item.path.split('/'),2).join('/')
                 episode.videos.push(object)
             }
             if(type == 'subtitle') {
+                object.type = 'text/vtt'
                 object.lang = lang
-                object.type = 'video/mp4'
                 object.src = '/' + takeRight(item.path.split('/'),2).join('/')
                 episode.subtitles.push(object)
             }
