@@ -25,7 +25,6 @@ class Model {
         this.state = {}
         this.mask = Object.assign(defaults.mask, options.mask)
         this.keymap = Object.assign(defaults.keymap, options.keymap)
-        this.graph = []
         this.queue = []
         this.cache = []
         this.path = {

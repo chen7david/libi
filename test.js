@@ -16,7 +16,8 @@ let i = 0
 const run = async (ctx) => {
     dd({i})
     // const res = await library.import()
-    const res = await library.updateGraph()
+    // const res = await library.updateGraph()
+    const res = await library.graph()
     ctx.body = res
     // dd(res)
     i++
