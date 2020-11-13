@@ -1,5 +1,5 @@
 const Model = require('./Model')
-const { padStart } = require('lodash')
+const { padStart, takeRight } = require('lodash')
 const p = require('path')
 const dd = (val) => console.log(val)
 
@@ -35,6 +35,39 @@ class Show extends Model {
         this.clearCache()
         this.clearQueue()
     }
+
+    buildGraph(){
+        for(let item of this.queue){
+            const { id, type, lang, episode:{ s, e } } = item.analyze()
+            let show = this.getFromCache(id)
+            if(!show) continue
+            let season = show.seasons.find(sn => sn.season_number == s)
+            if(!season) continue
+            let episode = season.episodes.find(ep => ep.episode_number == e)
+            if(!episode.videos) Object.assign(episode, {videos:[], subtitles:[]})
+            const object = {}
+            if(type == 'video'){
+                object.type = 'text/vtt'
+                object.src = '/' + takeRight(item.path.split('/'),2).join('/')
+                episode.videos.push(object)
+            }
+            if(type == 'subtitle') {
+                object.lang = lang
+                object.type = 'video/mp4'
+                object.src = '/' + takeRight(item.path.split('/'),2).join('/')
+                episode.subtitles.push(object)
+            }
+        }
+        for(let show of this.cache){
+            delete show.episodes
+            for(let season of show.seasons){
+                season.episodes = season.episodes.filter(ep => ep.videos || ep.subtitles)
+            }
+        }
+        return this.cache
+    }
 }
 
 module.exports = Show
+
+// this.cache = this.cache.map(show => Object.assign(m, {videos:[], subtitles:[]}))

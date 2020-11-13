@@ -11,13 +11,14 @@ const Libi = require('./index')({
     })
 })
 
-const library = Libi('movies')
+const library = Libi('shows')
 let i = 0
 const run = async (ctx) => {
     dd({i})
+    // const res = await library.import()
     const res = await library.updateGraph()
     ctx.body = res
-    dd(res)
+    // dd(res)
     i++
 }
 
