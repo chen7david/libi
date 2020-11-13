@@ -10,37 +10,18 @@ class Show extends Model {
         this.tmdb = () => this.agent.tmdb().shows()
     }
 
-    // async import(){
-    //     const items = await this.scanFolder(this.watchPath())
-    //     for(let item of items){
-    //         const { show, year, id, query } = item.analyze()
-    //         const search = id || show || query, options = {}
-    //         if(year) options.year = year
-    //         const match = await this.findOne(search, options)
-    //         const mask = this.renameKeys(match, (k, v) => {
-    //             /* MUTATE OBJECT VALUES */
-    //             if(k == 'year') v = new Date(v).getFullYear()
-    //             if(k == 's') v = padStart(v,2,'0')
-    //             if(k == 'e') v = padStart(v,3,'0')
-    //             return v
-    //         })
-    //         // const mask = this.getMask({movie, file:item})
-    //         dd({mask})
-    //     }
-    // }
-
     normalizeString(string){
         return string.toLowerCase().match(/[\w'-]+/g)
     }
 
     async processQueue(Folder){
         for(let item of this.queue){
-            const { id, lang, ext, type, episode: {s, e} } = item.analyze()
+            const { id, lang, ext, type } = item.analyze()
             let show = this.getFromCache(id) 
             if(!show) continue
             let episode = item.episode ? 
-                show.episodes.find(ep => ep.season_number == s && ep.episode_number == e) :
-                show.episodes.find(ep => this.normalizeString(ep.name).every(k => item.basename.toLowerCase().match(/[\w'-]+/g).join(' ').includes(k)))
+                show.episodes.find(ep => ep.season_number == item.episode.s && ep.episode_number == item.episode.e) :
+                show.episodes.find(ep => this.normalizeString(ep.name).every(k => this.normalizeString(item.basename).join(' ').includes(k)))
             if(!episode) continue
             Object.assign(episode, lang ? {lang} : {}, ext ? {ext} : {}, {showname: show.name})
             episode = this.renameKeys(episode, (k, v) => {
