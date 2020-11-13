@@ -1,6 +1,6 @@
 {
   "name": "libi",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,12 +18,8 @@
   },
   "homepage": "https://github.com/chen7david/libi#readme",
   "dependencies": {
-    "axios": "^0.21.0",
     "filee": "0.0.2",
     "hotfile": "0.0.6",
-    "kcors": "^2.2.2",
-    "koa": "^2.13.0",
-    "lodash": "^4.17.20",
     "meta-agent": "0.0.6",
     "srt-to-vtt": "^1.1.3",
     "stringspector": "0.0.4",

@@ -1,7 +1,6 @@
 const dd = (val) => console.log(val)
 const p = require('path')
 const Koa = require('koa')
-const cors = require('kcors')
 const app = new Koa()
 const Libi = require('./index')({
     homedir: p.resolve('/Users/davidchen/Desktop/media'),
