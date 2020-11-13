@@ -30,7 +30,7 @@ class Model {
         this.path = {
             homedir: p.join(options.homedir + '/' + '@public', this.name),
             watchdir: p.join(options.watchdir || options.homedir, this.name),
-            graph: p.join(options.homedir + '/' + '@public', this.name, this.name + '.graph')
+            graph: p.join(options.homedir + '/' + '@public', 'graphs', this.name + '.graph')
         }
         this.homePath = () => this.path.homedir
         this.watchPath = () => this.path.watchdir
