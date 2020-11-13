@@ -8,7 +8,7 @@ const Libi = require('./index')({
     })
 })
 
-const library = Libi('shows')
+const library = Libi('movies')
 
 const run = async () => {
     const res = await library.import()

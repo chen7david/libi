@@ -92,7 +92,10 @@ class Model {
 
             const mask = this.renderMask(this.mask, match)
             const Folder = await this.homeFolder.createChildDir(mask[this.className()].folder)
-            const files = this.filesThrough(item,  {id: match.id})
+            const allowed = ['.mp4', '.m4v'].concat(inspectorConfig.extensions.subtitle)
+            const files = this.filesThrough(item, (i) => {
+                if(allowed.includes(i.ext))return Object.assign(i, {id: match.id})
+            })
 
             this.addToCache(match)
             this.addToQueue(files)
@@ -104,6 +107,7 @@ class Model {
 
     async moveFile(item, mask, toFolder){
         if(item.type != 'subtitle'){
+            if(item.ext == '.m4v') mask.file = mask.file.replace('.m4v','.mp4')
             await item.moveTo(toFolder, mask.file)
         }else{
             if(item.lang){
@@ -152,18 +156,32 @@ class Model {
         return await Hotfile.map(path,{exclude: /(^|\/)\.[^\/\.]/g})
     }
 
-    filesThrough(item, object = {}){
+    filesThrough(item, func){
         const files = []
         function extract(item){
             if(item.isDirectory) {
-                for(let child of item.children) extract(child)
+                for(let child of item.children) extract(child, func)
             }else{
-                files.push(Object.assign(item,object))
+                const file = func ? func(item) : item
+                if(file) files.push(file)
             }
         }
-        extract(item, object)
+        extract(item, func)
         return files
     }
+
+    // filesThrough(item, object = {}){
+    //     const files = []
+    //     function extract(item){
+    //         if(item.isDirectory) {
+    //             for(let child of item.children) extract(child)
+    //         }else{
+    //             files.push(Object.assign(item,object))
+    //         }
+    //     }
+    //     extract(item, object)
+    //     return files
+    // }
 
     /* Mask Manager */
 
