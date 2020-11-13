@@ -1,4 +1,5 @@
 const Model = require('./Model')
+const { takeRight } = require('lodash')
 const p = require('path')
 const dd = (val) => console.log(val)
 
@@ -22,16 +23,26 @@ class Movie extends Model {
     }
 
     buildGraph(){
-        const movies = []
-        for(let file of this.queue){
-            const { id, type } = file.analyze()
+        this.cache = this.cache.map(m => Object.assign(m, {videos:[], subtitles:[]}))
+        for(let item of this.queue){
+            const { id, type, lang } = item.analyze()
             let movie = this.getFromCache(id)
-            if(!movie.videos) Object.assign(movie, {videos:[], subtitles:[]})
-            if(type == 'video') movie.videos.push(file)
-            if(type == 'subtitle') movie.subtitles.push(file)
-            dd({movie})
+            const object = {}
+            if(type == 'video'){
+                object.src = '/' + takeRight(item.path.split('/'),2).join('/')
+                movie.videos.push(object)
+            }
+            if(type == 'subtitle') {
+                object.lang = lang
+                object.src = '/' + takeRight(item.path.split('/'),2).join('/')
+                movie.subtitles.push(object)
+            }
         }
+        return this.cache
     }
 }
 
 module.exports = Movie
+
+
+// item = pick(item, Object.values(this.keymap))

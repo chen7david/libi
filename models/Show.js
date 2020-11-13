@@ -10,10 +10,6 @@ class Show extends Model {
         this.tmdb = () => this.agent.tmdb().shows()
     }
 
-    normalizeString(string){
-        return string.toLowerCase().match(/[\w'-]+/g)
-    }
-
     async processQueue(Folder){
         for(let item of this.queue){
             const { id, lang, ext, type } = item.analyze()

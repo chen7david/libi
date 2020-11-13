@@ -42,6 +42,10 @@ class Model {
         this.overwrite = true
     }
 
+    normalizeString(string){
+        return string.toLowerCase().match(/[\w'-]+/g)
+    }
+
     className(){
         return this.constructor.name.toLowerCase()
     }
@@ -53,15 +57,17 @@ class Model {
 
     async findOne(name, options = {}){
         let isNumer = /^\d+$/.test(name)
-        let match = null, matches = null
+        let match = null, matches = null, search = name.replace(/ -/g,':').replace(/  +/g, ' ')
         if(isNumer) match = await this.http().withId(name).get()
         if(!match){
-            matches = await this.http().search(name, options)
+            matches = await this.http().search(search, options)
             match = matches.length > 0 ? matches[0] : null
+            dd({msrg:'looking for internal source ...', matches, search, options})
         }
         if(!match) {
-            matches = await this.tmdb().search(name, options)
+            matches = await this.tmdb().search(search, options)
             match = matches.length > 0 ? await this.tmdb().withId(matches[0].id).get() : null
+            dd({msrg:'looking for external source ...', matches, search, options})
         }
         if(match && this.className() == 'show'){
             match = await this.http().withId(match.id).get() 
@@ -86,12 +92,12 @@ class Model {
             this.addToCache(match)
             this.addToQueue(files)
         }
-        this.buildGraph()
+        
 
         // this.clearCache()
         // this.clearQueue()
-        dd('done-------------------------------------------------')
-        return items
+        dd('done-------------------------------------------------@')
+        return this.buildGraph()
     }
 
     async import(){
