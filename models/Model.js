@@ -7,6 +7,8 @@ const defaults = require('./../default')
 const inspectorConfig = require('stringspector')
 const inspector = require('stringspector')(inspectorConfig)
 const subsrt = require('subsrt')
+const strTovtt = require('srt-to-vtt')
+
 
 Hotfile.prototype.analyze = function () {
     const string = this.basename
@@ -19,6 +21,7 @@ class Model {
     constructor(options){
         this.name = options.name
         this.agent = options.agent
+        this.overwrite = false
         this.state = {}
         this.mask = Object.assign(defaults.mask, options.mask)
         this.keymap = Object.assign(defaults.keymap, options.keymap)
@@ -35,6 +38,10 @@ class Model {
         this.mkdirSync(this.watchPath())
         this.homeFolder = new Hotfile(this.homePath())
     } 
+
+    force(){
+        this.overwrite = true
+    }
 
     className(){
         return this.constructor.name.toLowerCase()
@@ -62,13 +69,13 @@ class Model {
 
     async import(){
         const items = await this.scandir(this.watchPath())
-        let i = 0
         for(let item of items){
             const { year, id, query } = item.analyze()
-            const search = id || item[this.className()] || query, options = {}
+            let search = id || item[this.className()] || query, options = {}
+            if(year) search = search.replace(year,'')
             if(year) options.year = year
             let match = await this.findOne(search, options)
-
+            dd({match, search, year, id, query})
             if(!match) continue
 
             if(this.className() == 'show'){
@@ -100,8 +107,19 @@ class Model {
             await item.moveTo(toFolder, mask.file)
         }else{
             if(item.lang){
+                const fromPath = item.path
                 const toPath = p.join(toFolder.path, mask.subtitle)
-                this.tovtt(item.path, toPath)
+                switch (item.ext) {
+                    case '.srt':
+                        await this.srt2vtt(fromPath, toPath)
+                        break;
+                    // case '.ass':
+                    //     await this.ass2vtt(fromPath, toPath)
+                    //     break;
+                    default:
+                        this.tovtt(fromPath, toPath)
+                        break;
+                }
             }
         }
     }
@@ -172,13 +190,41 @@ class Model {
         return b
     }
 
+    async srt2vtt(sourcePath, destPath){
+        try {
+            if(!await Hotfile.exists(destPath) || this.overwrite) {
+                await fs.createReadStream(sourcePath)
+                .pipe(strTovtt())
+                .pipe(fs.createWriteStream(destPath))
+            }else{
+                console.log({message: `sub already exists for ...${destPath}`})
+            }
+        } catch (err) {
+            console.log(err, {message: `sub error for ...${destPath}`})
+        }
+    }
+
+    // async ass2vtt(sourcePath, destPath){
+    //     try {
+    //         if(!await Hotfile.exists(destPath) || this.overwrite) {
+    //             await fs.createReadStream(sourcePath)
+    //             .pipe(assTovtt())
+    //             .pipe(fs.createWriteStream(destPath))
+    //         }else{
+    //             console.log({message: `sub already exists for ...${destPath}`})
+    //         }
+    //     } catch (err) {
+    //         console.log({err, message: `sub error for ...${destPath}`})
+    //     }
+    // }
+
     tovtt(fromPath, toPath){
         try {
             const input = fs.readFileSync(fromPath, 'utf8')
             const convereted = subsrt.convert(input, { format: 'vtt' })
             fs.writeFileSync(toPath, convereted)
         } catch (err) {
-            dd({fromPath, err})
+            dd({err, fromPath})
         }
     }
 }
