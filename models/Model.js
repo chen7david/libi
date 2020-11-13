@@ -8,6 +8,7 @@ const inspectorConfig = require('stringspector')
 const inspector = require('stringspector')(inspectorConfig)
 const subsrt = require('subsrt')
 const strTovtt = require('srt-to-vtt')
+const Filee = require('filee')
 
 Hotfile.prototype.analyze = function () {
     const string = this.basename
@@ -30,13 +31,21 @@ class Model {
         this.path = {
             homedir: p.join(options.homedir + '/' + '@public', this.name),
             watchdir: p.join(options.watchdir || options.homedir, this.name),
+            graph: p.join(options.homedir + '/' + '@public', this.name, this.name + '.graph')
         }
         this.homePath = () => this.path.homedir
         this.watchPath = () => this.path.watchdir
+        this.graphPath = () => this.path.graph
         this.mkdirSync(this.homePath())
         this.mkdirSync(this.watchPath())
         this.homeFolder = new Hotfile(this.homePath())
-    } 
+    }
+   
+    async graph(){
+        const graph = await Filee.load(this.graphPath())
+        await graph.read()
+        return graph ? graph.getContent() : []  
+    }
 
     force(){
         this.overwrite = true
@@ -92,12 +101,12 @@ class Model {
             this.addToCache(match)
             this.addToQueue(files)
         }
-        
-
-        // this.clearCache()
-        // this.clearQueue()
-        dd('done-------------------------------------------------@')
-        return this.buildGraph()
+        const graph = this.buildGraph()
+        const file = await Filee.create(this.graphPath())
+        await file.update(graph).save() 
+        this.clearCache()
+        this.clearQueue()
+        return graph
     }
 
     async import(){
@@ -196,19 +205,6 @@ class Model {
         extract(item, func)
         return files
     }
-
-    // filesThrough(item, object = {}){
-    //     const files = []
-    //     function extract(item){
-    //         if(item.isDirectory) {
-    //             for(let child of item.children) extract(child)
-    //         }else{
-    //             files.push(Object.assign(item,object))
-    //         }
-    //     }
-    //     extract(item, object)
-    //     return files
-    // }
 
     /* Mask Manager */
 

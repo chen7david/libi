@@ -19,6 +19,7 @@
   "homepage": "https://github.com/chen7david/libi#readme",
   "dependencies": {
     "axios": "^0.21.0",
+    "filee": "0.0.2",
     "hotfile": "0.0.6",
     "kcors": "^2.2.2",
     "koa": "^2.13.0",

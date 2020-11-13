@@ -63,7 +63,7 @@ class Show extends Model {
             for(let season of show.seasons){
                 season.episodes = season.episodes.filter(ep => ep.videos || ep.subtitles)
             }
-        }
+        } 
         return this.cache
     }
 }
