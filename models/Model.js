@@ -66,8 +66,8 @@ class Model {
 
     async import(){
         const items = await this.scandir(this.watchPath())
+        let i = 0
         for(let item of items){
-            dd({item})
             const { year, id, query } = item.analyze()
             const search = id || item[this.className()] || query, options = {}
             if(year) options.year = year
@@ -90,8 +90,12 @@ class Model {
             const files = this.filesThrough(item,  {id: match.id})
             this.addToCache(match)
             this.addToQueue(files)
+            i+= 1
+            dd({files: files.length, msg: `files in batch number: ${i}`})
+            dd('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
             await this.processQueue() 
         }
+        
         return this
     }
     
