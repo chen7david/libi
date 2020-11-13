@@ -39,11 +39,7 @@ class Model {
     className(){
         return this.constructor.name.toLowerCase()
     }
-    
-    getHotfile(path){
-        return new Hotfile(path)
-    }
-    
+        
     mkdirSync(path){
         try {fs.mkdirSync(path, {recursive: true}); return true} 
         catch (err) { return false}
@@ -109,23 +105,6 @@ class Model {
             }
         }
     }
-    
-    async createCase(item){
-        const { movie, year, id, query, lang, ext, type } = item
-            const search = id || movie || query, options = {}
-            if(year) options.year = year
-            let match = await this.findOne(search, options)
-            if(!match) return null
-            
-            match = this.renameKeys(match, (k, v) => {
-                /* MUTATE MATCH OBJECT VALUES */
-                if(k == 'year') v = new Date(v).getFullYear()
-                return v
-            })
-            const mask = this.renderMask(this.mask, match)
-            const files = this.filesThrough(item)
-            dd({mask, files})
-    }
 
     addToCache(item){
         if(this.getFromCache(item.id)) return true
@@ -149,11 +128,6 @@ class Model {
     clearQueue(){
         this.queue = []
         return this
-    }
-
-    async mkdir(path){
-        return fs.promises.mkdir(path, { recursive: true })
-            .then(() => true).catch(() => false)
     }
 
     async scandir(path){
