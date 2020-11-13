@@ -16,14 +16,6 @@ class Movie extends Model {
             Object.assign(match, lang ? {lang} : {}, ext ? {ext} : {})
             const { movie } = this.renderMask(this.mask, match)
             await this.moveFile(item, movie, Folder)
-            // if(type != 'subtitle'){
-            //     await item.moveTo(Folder, movie.file)
-            // }else{
-            //     if(lang){
-            //         const toPath = p.join(Folder.path, movie.subtitle)
-            //         this.tovtt(item.path, toPath)
-            //     }
-            // }
         }
         this.clearCache()
         this.clearQueue()

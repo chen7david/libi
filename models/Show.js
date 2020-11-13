@@ -35,14 +35,6 @@ class Show extends Model {
             const mask = this.renderMask(this.mask, episode)
             const SeasonFolder = await Folder.createChildDir(mask.season.folder)
             await this.moveFile(item, mask.episode, SeasonFolder)
-            // if(type != 'subtitle'){
-            //     await item.moveTo(SeasonFolder, mask.episode.file)
-            // }else{
-            //     if(lang){
-            //         const toPath = p.join(SeasonFolder.path, mask.episode.subtitle)
-            //         this.tovtt(item.path, toPath)
-            //     }
-            // }
         }
         this.clearCache()
         this.clearQueue()
