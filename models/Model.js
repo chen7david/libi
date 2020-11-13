@@ -72,7 +72,6 @@ class Model {
 
     async updateGraph(){
         const items = await this.scandir(this.homePath())
-        dd
         for(let item of items) {
             const { year, id, query } = item.analyze()
             let search = id || item[this.className()] || query, options = {}
@@ -85,12 +84,12 @@ class Model {
                 if(allowed.includes(i.ext))return Object.assign(i, {id: match.id})
             })
             this.addToCache(match)
-            dd({files})
             this.addToQueue(files)
         }
         this.buildGraph()
-        this.clearCache()
-        this.clearQueue()
+
+        // this.clearCache()
+        // this.clearQueue()
         dd('done-------------------------------------------------')
         return items
     }

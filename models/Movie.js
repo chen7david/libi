@@ -24,8 +24,12 @@ class Movie extends Model {
     buildGraph(){
         const movies = []
         for(let file of this.queue){
-            const { type } = file.analyze()
-            dd({file})
+            const { id, type } = file.analyze()
+            let movie = this.getFromCache(id)
+            if(!movie.videos) Object.assign(movie, {videos:[], subtitles:[]})
+            if(type == 'video') movie.videos.push(file)
+            if(type == 'subtitle') movie.subtitles.push(file)
+            dd({movie})
         }
     }
 }
