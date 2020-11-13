@@ -87,13 +87,13 @@ class Model {
                 return v
             })
 
+            const mask = this.renderMask(this.mask, match)
+            const Folder = await this.homeFolder.createChildDir(mask[this.className()].folder)
             const files = this.filesThrough(item,  {id: match.id})
+
             this.addToCache(match)
             this.addToQueue(files)
-            i+= 1
-            dd({files: files.length, msg: `files in batch number: ${i}`})
-            dd('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-            await this.processQueue() 
+            await this.processQueue(Folder) 
         }
         
         return this

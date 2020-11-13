@@ -9,18 +9,17 @@ class Movie extends Model {
         this.tmdb = () => this.agent.tmdb().movies()
     }
 
-    async processQueue(){
+    async processQueue(Folder){
         for(let item of this.queue){
             const { id, lang, ext, type } = item.analyze()
             const match = this.getFromCache(id)
             Object.assign(match, lang ? {lang} : {}, ext ? {ext} : {})
             const { movie } = this.renderMask(this.mask, match)
-            const MovieFolder = await this.homeFolder.createChildDir(movie.folder)
             if(type != 'subtitle'){
-                await item.moveTo(MovieFolder, movie.file)
+                await item.moveTo(Folder, movie.file)
             }else{
                 if(lang){
-                    const toPath = p.join(MovieFolder.path, movie.subtitle)
+                    const toPath = p.join(Folder.path, movie.subtitle)
                     this.tovtt(item.path, toPath)
                 }
             }
