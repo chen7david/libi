@@ -1,5 +1,8 @@
 const dd = (val) => console.log(val)
 const p = require('path')
+const Koa = require('koa')
+const cors = require('kcors')
+const app = new Koa()
 const Libi = require('./index')({
     homedir: p.resolve('/Users/david/Desktop/media'),
     agent: require('meta-agent')({
@@ -9,11 +12,15 @@ const Libi = require('./index')({
 })
 
 const library = Libi('movies')
-
-const run = async () => {
-    const res = await library.import()
-    // dd(res)
+let i = 0
+const run = async (ctx) => {
+    dd({i})
+    const res = await library.updateGraph()
+    ctx.body = library
+    i++
 }
+app.use(cors())
+app.use(run)
 
-run()
+app.listen(4000)
 

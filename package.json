@@ -20,6 +20,8 @@
   "dependencies": {
     "axios": "^0.21.0",
     "hotfile": "0.0.6",
+    "kcors": "^2.2.2",
+    "koa": "^2.13.0",
     "lodash": "^4.17.20",
     "meta-agent": "0.0.6",
     "srt-to-vtt": "^1.1.3",

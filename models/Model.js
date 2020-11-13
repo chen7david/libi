@@ -9,7 +9,6 @@ const inspector = require('stringspector')(inspectorConfig)
 const subsrt = require('subsrt')
 const strTovtt = require('srt-to-vtt')
 
-
 Hotfile.prototype.analyze = function () {
     const string = this.basename
     const metadata = inspector.loadString(string).filter().inspect().get()
@@ -64,7 +63,36 @@ class Model {
             matches = await this.tmdb().search(name, options)
             match = matches.length > 0 ? await this.tmdb().withId(matches[0].id).get() : null
         }
+        if(match && this.className() == 'show'){
+            match = await this.http().withId(match.id).get() 
+            match.episodes = match.seasons.map(s => s.episodes).reduce((acc, curr) => acc.concat(curr))
+        }
         return match 
+    }
+
+    async updateGraph(){
+        const items = await this.scandir(this.homePath())
+        dd
+        for(let item of items) {
+            const { year, id, query } = item.analyze()
+            let search = id || item[this.className()] || query, options = {}
+            if(year) search = search.replace(year,'')
+            if(year) options.year = year
+            let match = await this.findOne(search, options)
+            if(!match) continue
+            const allowed = ['.mp4', '.vtt']
+            const files = this.filesThrough(item, (i) => {
+                if(allowed.includes(i.ext))return Object.assign(i, {id: match.id})
+            })
+            this.addToCache(match)
+            dd({files})
+            this.addToQueue(files)
+        }
+        this.buildGraph()
+        this.clearCache()
+        this.clearQueue()
+        dd('done-------------------------------------------------')
+        return items
     }
 
     async import(){
@@ -75,13 +103,7 @@ class Model {
             if(year) search = search.replace(year,'')
             if(year) options.year = year
             let match = await this.findOne(search, options)
-            dd({match, search, year, id, query})
             if(!match) continue
-
-            if(this.className() == 'show'){
-                match = await this.http().withId(match.id).get() 
-                match.episodes = match.seasons.map(s => s.episodes).reduce((acc, curr) => acc.concat(curr))
-            }
 
             match = this.renameKeys(match, (k, v) => {
                 /* MUTATE MATCH OBJECT VALUES */
@@ -144,7 +166,7 @@ class Model {
 
     addToQueue(item){
        Array.isArray(item) ? this.queue = this.queue.concat(item) : this.queue.push(item)
-        return this
+       return this
     }
 
     clearQueue(){

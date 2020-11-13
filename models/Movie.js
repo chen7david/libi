@@ -20,6 +20,14 @@ class Movie extends Model {
         this.clearCache()
         this.clearQueue()
     }
+
+    buildGraph(){
+        const movies = []
+        for(let file of this.queue){
+            const { type } = file.analyze()
+            dd({file})
+        }
+    }
 }
 
 module.exports = Movie
