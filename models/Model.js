@@ -37,6 +37,7 @@ class Model {
         this.graphPath = () => this.path.graph
         this.mkdirSync(this.homePath())
         this.mkdirSync(this.watchPath())
+        this.mkdirSync(p.join(options.homedir + '/' + '@public', 'graphs'))
         this.homeFolder = new Hotfile(this.homePath())
     }
    
@@ -187,8 +188,8 @@ class Model {
         return this
     }
 
-    async scandir(path, options = {}){
-        return await Hotfile.map(path, options)
+    async scandir(path){
+        return await Hotfile.map(path,{exclude: /(^|\/)\.[^\/\.]/g})
     }
 
     filesThrough(item, func){
