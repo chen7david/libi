@@ -187,8 +187,8 @@ class Model {
         return this
     }
 
-    async scandir(path){
-        return await Hotfile.map(path,{exclude: /(^|\/)\.[^\/\.]/g})
+    async scandir(path, options = {}){
+        return await Hotfile.map(path, options)
     }
 
     filesThrough(item, func){
