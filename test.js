@@ -7,7 +7,10 @@ const Libi = require('./index')({
     agent: require('meta-agent')({
         baseURL: 'http://192.168.50.251:8000',
         // baseURL: 'http://aox.hopto.org:8000',
-    })
+    }),
+    scandir:{
+
+    }
 })
 
 const library = Libi('shows')

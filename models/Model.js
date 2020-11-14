@@ -22,7 +22,7 @@ class Model {
         this.name = options.name
         this.agent = options.agent
         this.overwrite = false
-        this.state = {}
+        this.scanconfig = options.scandir || {}
         this.mask = Object.assign(defaults.mask, options.mask)
         this.keymap = Object.assign(defaults.keymap, options.keymap)
         this.queue = []
@@ -189,7 +189,7 @@ class Model {
     }
 
     async scandir(path){
-        return await Hotfile.map(path,{exclude: /(^|\/)\.[^\/\.]/g})
+        return await Hotfile.map(path, this.scanconfig)
     }
 
     filesThrough(item, func){
