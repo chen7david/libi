@@ -48,13 +48,13 @@ class Show extends Model {
             const object = {}
             if(type == 'video'){
                 object.type = 'video/mp4'
-                object.src = '/' + takeRight(item.path.split('/'),2).join('/')
+                object.src = '/' + takeRight(item.path.split('/'),3).join('/')
                 episode.videos.push(object)
             }
             if(type == 'subtitle') {
                 object.type = 'text/vtt'
                 object.lang = lang
-                object.src = '/' + takeRight(item.path.split('/'),2).join('/')
+                object.src = '/' + takeRight(item.path.split('/'),3).join('/')
                 episode.subtitles.push(object)
             }
         }
@@ -69,5 +69,3 @@ class Show extends Model {
 }
 
 module.exports = Show
-
-// this.cache = this.cache.map(show => Object.assign(m, {videos:[], subtitles:[]}))
