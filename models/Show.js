@@ -46,12 +46,12 @@ class Show extends Model {
             let episode = season.episodes.find(ep => ep.episode_number == e)
             if(!episode.videos) Object.assign(episode, {videos:[], subtitles:[]})
             const object = {}
-            if(type == 'video'){
+            if(episode.videos && type == 'video'){
                 object.type = 'video/mp4'
                 object.src = '/' + takeRight(item.path.split('/'),3).join('/')
                 episode.videos.push(object)
             }
-            if(type == 'subtitle') {
+            if(episode.subtitles && type == 'subtitle') {
                 object.type = 'text/vtt'
                 object.lang = lang
                 object.src = '/' + takeRight(item.path.split('/'),3).join('/')
